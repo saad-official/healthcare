@@ -19,6 +19,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Select, SelectContent, SelectTrigger, SelectValue } from "./ui/select";
 import { Textarea } from "./ui/textarea";
+import { Checkbox } from "./ui/checkbox";
 interface CustomProps {
   fieldType: FormFieldType;
   control: Control<any>;
@@ -42,7 +43,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
     placeholder,
     dateFormat,
     showTimeSelect,
-    renderSkeleton
+    renderSkeleton,
   } = props;
   switch (fieldType) {
     case FormFieldType.INPUT:
@@ -105,41 +106,57 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
           </FormControl>
         </div>
       );
-  
+
     case FormFieldType.SKELETON:
-      return renderSkeleton ? renderSkeleton(field) : null
-  
-    
+      return renderSkeleton ? renderSkeleton(field) : null;
+
     case FormFieldType.SELECT:
       return (
         <FormControl>
-          <Select onValueChange={field.onValueChange} defaultValue={field.value}>
-          <FormControl>
-            <SelectTrigger  className="shad-select-trigger">
-            <SelectValue placeholder={placeholder} />
-            </SelectTrigger>
-          </FormControl>
-          <SelectContent className="shad-select-content">
-            {props.children}
-          </SelectContent>
+          <Select
+            onValueChange={field.onValueChange}
+            defaultValue={field.value}
+          >
+            <FormControl>
+              <SelectTrigger className="shad-select-trigger">
+                <SelectValue placeholder={placeholder} />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent className="shad-select-content">
+              {props.children}
+            </SelectContent>
           </Select>
         </FormControl>
-      )
+      );
 
-
-      case FormFieldType.TEXTAREA:
-        return (
-          <FormControl>
-            <Textarea 
+    case FormFieldType.TEXTAREA:
+      return (
+        <FormControl>
+          <Textarea
             placeholder={placeholder}
             {...field}
             className="shad-textArea"
             disabled={props.disabled}
+          />
+        </FormControl>
+      );
+
+    case FormFieldType.CHECKBOX:
+      return (
+        <FormControl>
+          <div className="flex items-center gap-4 ">
+            <Checkbox
+              id={props.name}
+              checked={field.value}
+              onCheckedChange={field.onChange}
             />
-          </FormControl>
-        )
-    
-    }
+            <label htmlFor={props.name} className="checkbox-label">
+              {props.label}
+            </label>
+          </div>
+        </FormControl>
+      );
+  }
 };
 
 const CustomFormField = (props: CustomProps) => {

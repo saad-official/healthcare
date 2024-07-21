@@ -25,6 +25,7 @@ import { Doctors, GenderOptions, IdentificationTypes } from "@/constant";
 import { Label } from "../ui/label";
 import { SelectItem } from "../ui/select";
 import Image from "next/image";
+import { FileUploader } from "../fil-uploader";
 
 export enum FormFieldType {
   INPUT = "input",
@@ -284,6 +285,45 @@ export function RegisterForm() {
           name="identificationNumber"
           label="Identification number"
           placeholder="1234494949"
+        />
+
+        <CustomFormField
+          fieldType={FormFieldType.SKELETON}
+          control={form.control}
+          name="identificationDocument"
+          label="Scanned copy of identification document"
+          renderSkeleton={(field) => (
+            <FormControl>
+              <FileUploader files={field.value} onChange={field.onChange} />
+            </FormControl>
+          )}
+        />
+
+        <section className="space-y-6">
+          <div className="mb-9 space-y-1">
+            <h2 className="sub-header">Consent and Privacy </h2>
+          </div>
+        </section>
+
+        <CustomFormField
+          fieldType={FormFieldType.CHECKBOX}
+          control={form.control}
+          name="treatmentConsent"
+          label="I consent to treatment"
+        />
+
+        <CustomFormField
+          fieldType={FormFieldType.CHECKBOX}
+          control={form.control}
+          name="disclouserConsent"
+          label="I consent to disclouser of information"
+        />
+
+        <CustomFormField
+          fieldType={FormFieldType.CHECKBOX}
+          control={form.control}
+          name="privacyConsent"
+          label="I consent to privacy policy"
         />
 
         <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
