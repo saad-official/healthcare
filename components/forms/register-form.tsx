@@ -17,11 +17,11 @@ import { Input } from "@/components/ui/input";
 import CustomFormField from "../CustomFormField";
 import SubmitButton from "../submit-button";
 import { useState } from "react";
-import { formSchema } from "@/lib/validation";
+import { PatientFormValidation, UserFormValidation } from "@/lib/validation";
 import { useRouter } from "next/navigation";
-import { createUser } from "@/lib/actions/patient.actions";
+import { createUser, registerPatient } from "@/lib/actions/patient.actions";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { Doctors, GenderOptions, IdentificationTypes } from "@/constant";
+import { Doctors, GenderOptions, IdentificationTypes, PatientFormDefaultValues } from "@/constant";
 import { Label } from "../ui/label";
 import { SelectItem } from "../ui/select";
 import Image from "next/image";
@@ -38,26 +38,49 @@ export enum FormFieldType {
   SKELETON = "skeleton",
 }
 
-export function RegisterForm() {
+export function RegisterForm({user}: {user:User}) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof PatientFormValidation>>({
+    resolver: zodResolver(PatientFormValidation),
     defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
+      ...PatientFormDefaultValues,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
     },
   });
 
-  async function onSubmit({ email, name, phone }: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof PatientFormValidation>) {
     setIsLoading(true);
 
+    let formData;
+
+    if(values.identificationDocument && values.identificationDocument.length > 0){
+      const blobFile = new Blob([values.identificationDocument[0]], {
+        type:values.identificationDocument[0].type,
+      })
+
+    formData = new FormData();
+    formData.append('blobFile', blobFile)
+    formData.append('fileName', values.identificationDocument[0].name)
+
+    }
+    
     try {
-      const userData = { name, email, phone };
-      const user = await createUser(userData);
-      console.log("user", user);
-      if (user) router.push(`/patients/${user?.$id}/register`);
+
+      const patientData = {
+        ...values,
+        userId:user.$id,
+        birthDate:new Date(values.birthDate),
+        identificationDocument:formData
+      }
+
+      // @ts-ignore
+      const patient = await registerPatient(patientData);
+
+      if(patient) router.push(`/patients/${user.$id}/new-appointment`)
+
     } catch (error: any) {
       console.log("error");
     }

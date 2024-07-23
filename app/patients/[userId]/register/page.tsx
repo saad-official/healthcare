@@ -5,7 +5,7 @@ import Link from 'next/link'
 import React from 'react'
 
 const Register = async ({params :{ userId}}:SearchParamProps) => {
-  // const user = await getUser(userId)
+  const user = await getUser(userId)
   return (
     <div className="max-h-screen flex h-screen">
     <section className="remove-scrollbar container">
@@ -18,7 +18,7 @@ const Register = async ({params :{ userId}}:SearchParamProps) => {
     className="mb-12 h-10 w-fit"
     />
    
-   <RegisterForm />
+   <RegisterForm user={user} />
 
     
     <p className="copyright py-12">
