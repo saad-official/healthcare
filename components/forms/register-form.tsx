@@ -45,27 +45,32 @@ export function RegisterForm({user}: {user:User}) {
     resolver: zodResolver(PatientFormValidation),
     defaultValues: {
       ...PatientFormDefaultValues,
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
+      name: user?.name,
+      email: user?.email,
+      phone: user?.phone,
     },
   });
 
   async function onSubmit(values: z.infer<typeof PatientFormValidation>) {
     setIsLoading(true);
 
+   
+    // Store file info in form data as
     let formData;
-
-    if(values.identificationDocument && values.identificationDocument.length > 0){
+    if (
+      values.identificationDocument &&
+      values.identificationDocument?.length > 0
+    ) {
       const blobFile = new Blob([values.identificationDocument[0]], {
-        type:values.identificationDocument[0].type,
-      })
+        type: values.identificationDocument[0].type,
+      });
 
-    formData = new FormData();
-    formData.append('blobFile', blobFile)
-    formData.append('fileName', values.identificationDocument[0].name)
-
+      formData = new FormData();
+      formData.append("blobFile", blobFile);
+      formData.append("fileName", values.identificationDocument[0].name);
     }
+
+
     
     try {
 
@@ -213,8 +218,8 @@ export function RegisterForm({user}: {user:User}) {
           label="Primary Physician"
           placeholder="Select a physician"
         >
-          {Doctors.map((doctor) => (
-            <SelectItem key={doctor.name} value={doctor.name}>
+          {Doctors.map((doctor, i) => (
+            <SelectItem key={doctor.name + i} value={doctor.name}>
               <div className="flex cursor-pointer items-center gap-2">
                 <Image
                   src={doctor.image}
@@ -338,7 +343,7 @@ export function RegisterForm({user}: {user:User}) {
         <CustomFormField
           fieldType={FormFieldType.CHECKBOX}
           control={form.control}
-          name="disclouserConsent"
+          name="disclosureConsent"
           label="I consent to disclouser of information"
         />
 
