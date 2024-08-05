@@ -1,5 +1,6 @@
 import { Doctors } from "@/constant";
 import { getAppointments } from "@/lib/actions/appointment.actions";
+import { formatDateTime } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -53,6 +54,16 @@ const SuccessAppointment = async ({
               className="size-6"
               alt="primaryPhysician"
             />
+            <p className="whitespace-nowrap">Dr. {doctor?.name}</p>
+          </div>
+          <div className="flex gap-2">
+            <Image
+              src="/assets/icons/calendar.svg"
+              width={24}
+              height={24}
+             alt="calendar"
+            />
+            <p>{formatDateTime(appointment.schedule).dateTime}</p>
           </div>
         </section>
       </div>
