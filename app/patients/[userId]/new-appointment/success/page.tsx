@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { Doctors } from "@/constant";
 import { getAppointments } from "@/lib/actions/appointment.actions";
 import { formatDateTime } from "@/lib/utils";
@@ -65,7 +66,16 @@ const SuccessAppointment = async ({
             />
             <p>{formatDateTime(appointment.schedule).dateTime}</p>
           </div>
-        </section>
+
+          </section>
+          <Button asChild variant='outline' className="shad-primary-btn">
+            <Link href={`patients/${userId}/new-appointment`}>
+            New Appointment
+            </Link>
+          </Button>
+
+          <p className="copyright"> @ 2024 Carepulse</p>
+        
       </div>
     </div>
   );
