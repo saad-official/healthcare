@@ -20,6 +20,10 @@ import { useState } from "react";
 import { getAppointmentSchema, UserFormValidation } from "@/lib/validation";
 import { useRouter } from "next/navigation";
 import { createUser } from "@/lib/actions/patient.actions";
+import { createAppointment } from "@/lib/actions/appointment.actions";
+import { SelectItem } from "../ui/select";
+import { Doctors } from "@/constant";
+import Image from "next/image";
 
 export enum FormFieldType {
   INPUT = "input",
@@ -45,32 +49,64 @@ export function AppointmentForm({
   const router = useRouter();
   const AppointmentFormValidation = getAppointmentSchema(type);
   const form = useForm<z.infer<typeof AppointmentFormValidation>>({
-    resolver: zodResolver(UserFormValidation),
+    resolver: zodResolver(AppointmentFormValidation),
     defaultValues: {
-     primaryPhysician: "",
-     cancellationReason:"",
-     note:'',
-     schedule: new Date(),
-     reason:"",
-    
+      primaryPhysician: "",
+      cancellationReason: "",
+      note: "",
+      schedule: new Date(),
+      reason: "",
     },
   });
 
-  async function onSubmit({
-    email,
-    name,
-    phone,
-  }: z.infer<typeof UserFormValidation>) {
+  async function onSubmit(values: z.infer<typeof AppointmentFormValidation>) {
     setIsLoading(true);
+    console.log("come here");
+    let status;
+    switch (type) {
+      case "schedule":
+        status = "scheduled";
+        break;
+      case "cancel":
+        status = "cancelled";
+        break;
+      default:
+        status = "pending";
+        break;
+    }
 
     try {
-      const userData = { name, email, phone };
-      const user = await createUser(userData);
-      console.log("user", user);
-      if (user) router.push(`/patients/${user?.$id}/register`);
-    } catch (error: any) {
-      console.log("error");
+      if (type === "create" && patientId) {
+        const appointmentData = {
+          userId,
+          patient: patientId,
+          primaryPhysician: values.primaryPhysician,
+          schedule: new Date(values.schedule),
+          reason: values.reason!,
+          note: values.note!,
+          status: status as Status,
+        };
+
+        const appointment = await createAppointment(appointmentData);
+        if (appointment) {
+          form.reset();
+          router.push(
+            `/patients/${userId}/new-appointment/success?appointmentId=${appointment.id}`
+          );
+        }
+      }
+    } catch (error) {
+      console.log("error", error);
     }
+
+    // try {
+    //   const userData = { name, email, phone };
+    //   const user = await createUser(userData);
+    //   console.log("user", user);
+    //   if (user) router.push(`/patients/${user?.$id}/register`);
+    // } catch (error: any) {
+    //   console.log("error");
+    // }
   }
 
   let buttonLabel;
@@ -100,6 +136,29 @@ export function AppointmentForm({
         {type !== "cancel" && (
           <>
             <CustomFormField
+              fieldType={FormFieldType.SELECT}
+              control={form.control}
+              name="primaryPhysician"
+              label="Doctor"
+              placeholder="Select a doctor"
+            >
+              {Doctors.map((doctor, i) => (
+                <SelectItem key={doctor.name + i} value={doctor.name}>
+                  <div className="flex cursor-pointer items-center gap-2">
+                    <Image
+                      src={doctor.image}
+                      width={32}
+                      height={32}
+                      alt="doctor"
+                      className="rounded-full border border-dark-500"
+                    />
+                    <p>{doctor.name}</p>
+                  </div>
+                </SelectItem>
+              ))}
+            </CustomFormField>
+
+            <CustomFormField
               fieldType={FormFieldType.DATE_PICKER}
               control={form.control}
               name="schedule"
@@ -121,7 +180,7 @@ export function AppointmentForm({
                 fieldType={FormFieldType.TEXTAREA}
                 placeholder="Enter Notes"
                 control={form.control}
-                name="notes"
+                name="note"
                 label="Notes"
               />
             </div>
