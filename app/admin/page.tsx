@@ -30,24 +30,24 @@ const AdminPage = () => {
 
         <section className="admin-stat">
           <StatCard
-            type="appointment"
+            type="appointments"
             count={5}
             label="Scheduled appointments"
-            icon="/assets/icons/appointments.svg "
+            icon="/assets/icons/appointments.svg"
           />
 
           <StatCard
             type="pending"
             count={5}
-            label="Scheduled appointments"
-            icon="/assets/icons/appointments.svg "
+            label="pending appointments"
+            icon="/assets/icons/pending.svg"
           />
 
           <StatCard
             type="cancelled"
             count={5}
-            label="Scheduled appointments"
-            icon="/assets/icons/appointments.svg "
+            label="cancelled appointments"
+            icon="/assets/icons/cancelled.svg"
           />
         </section>
       </main>
