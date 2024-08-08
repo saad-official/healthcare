@@ -1,16 +1,58 @@
-import Link from 'next/link'
-import React from 'react'
+import StatCard from "@/components/stat-card";
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
 
 const AdminPage = () => {
   return (
-    <div className='mx-auto flex max-w-7xl flex-col space-y-14'>
-        <header className='admin-header'>
-            <Link href={'/'} className='cursor-pointer'>
-            
-            </Link>
-            </header>
-    </div>
-  )
-}
+    <div className="mx-auto flex max-w-7xl flex-col space-y-14">
+      <header className="admin-header">
+        <Link href={"/"} className="cursor-pointer">
+          <Image
+            src={"/assets/icons/logo-full.svg"}
+            height={32}
+            width={162}
+            alt="Logo"
+            className="h-8 w-fit"
+          />
+        </Link>
 
-export default AdminPage
+        <p>Admin Dashboard</p>
+      </header>
+
+      <main className="admin-main">
+        <section className="w-full space-y-4">
+          <h1>Welcome</h1>
+          <p className="text-dark-700">
+            Start the day with managing new appointments
+          </p>
+        </section>
+
+        <section className="admin-stat">
+          <StatCard
+            type="appointment"
+            count={5}
+            label="Scheduled appointments"
+            icon="/assets/icons/appointments.svg "
+          />
+
+          <StatCard
+            type="pending"
+            count={5}
+            label="Scheduled appointments"
+            icon="/assets/icons/appointments.svg "
+          />
+
+          <StatCard
+            type="cancelled"
+            count={5}
+            label="Scheduled appointments"
+            icon="/assets/icons/appointments.svg "
+          />
+        </section>
+      </main>
+    </div>
+  );
+};
+
+export default AdminPage;
