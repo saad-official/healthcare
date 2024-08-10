@@ -6,23 +6,9 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-async function getData(): Promise<Payment[]> {
-  // Fetch data from your API here.
-  return [
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    // ...
-  ]
-}
 
 const AdminPage = async () => {
   const appointment = await getRecentAppointmentList();
-  const data  = await getData();
-  
   
   return (
     <div className="mx-auto flex max-w-7xl flex-col space-y-14">
@@ -71,7 +57,7 @@ const AdminPage = async () => {
           />
         </section>
 
-        <DataTable data={data} columns={columns} />
+        <DataTable data={appointment.documents} columns={columns} />
       </main>
     </div>
   );
