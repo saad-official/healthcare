@@ -43,11 +43,11 @@ export const columns: ColumnDef<Payment>[] = [
     {
     accessorKey: "status",
     header: "Status",
-    cell:({row}) => {
+    cell:({row}) => (
         <div className="min-w-[115px]">
-            <StatueBadge status={row.original.status} />
+            <StatueBadge status={row?.original?.status} />
         </div> 
-    }
+    )
   },
   {
     accessorKey: "email",

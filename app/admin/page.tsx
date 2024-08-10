@@ -9,7 +9,7 @@ import React from "react";
 
 const AdminPage = async () => {
   const appointment = await getRecentAppointmentList();
-  
+  console.log("sss", appointment)
   return (
     <div className="mx-auto flex max-w-7xl flex-col space-y-14">
       <header className="admin-header">

@@ -10,7 +10,7 @@ const StatueBadge = ({status}:{status:Status}) => {
         "bg-blue-600" : status === 'pending',
         "bg-red-600" : status === 'cancelled'
     })}>
-      <Image src={StatusIcon[status]} alt={status}  width={24} height={24} />
+      <Image src={StatusIcon[status]} alt={status}  width={24} height={24} className='w-3 h-fit' />
     </div>
   )
 }
