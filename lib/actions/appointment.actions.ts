@@ -94,3 +94,7 @@ export const getRecentAppointmentList = async () => {
     return parseStringify(data);
   } catch (error) {}
 };
+
+export const updateAppointment = async ({appointmentId, userId, appointment, type}:UpdateAppointmentParams) => {
+
+}

@@ -24,6 +24,7 @@ import { createAppointment } from "@/lib/actions/appointment.actions";
 import { SelectItem } from "../ui/select";
 import { Doctors } from "@/constant";
 import Image from "next/image";
+import { Appointment } from "@/types/appwrite.types";
 
 export enum FormFieldType {
   INPUT = "input",
@@ -40,10 +41,14 @@ export function AppointmentForm({
   type,
   userId,
   patientId,
+  appointment,
+  setOpen,
 }: {
   type: "create" | "cancel" | "schedule";
   userId: string;
   patientId: string;
+  appointment: Appointment;
+  setOpen: (open: boolean) => void;
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -94,6 +99,21 @@ export function AppointmentForm({
             `/patients/${userId}/new-appointment/success?appointmentId=${appointment.$id}`
           );
         }
+      }
+      else{
+        const appointmentToUpdae = {
+          userId,
+          appointmentId:appointment?.$id,
+          appointment:{
+            primaryPhysician:values?.primaryPhysician,
+           schedule:new Date(values?.schedule),
+           status:status as Status,
+           cancellationReason:values?.cancellationReason,
+          },
+          type
+        }
+
+        const updatedAppointment = await updateAppointment(appointmentToUpdae)
       }
     } catch (error) {
       console.log("error", error);
