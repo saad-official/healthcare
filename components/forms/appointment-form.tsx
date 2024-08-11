@@ -20,7 +20,10 @@ import { useState } from "react";
 import { getAppointmentSchema, UserFormValidation } from "@/lib/validation";
 import { useRouter } from "next/navigation";
 import { createUser } from "@/lib/actions/patient.actions";
-import { createAppointment } from "@/lib/actions/appointment.actions";
+import {
+  createAppointment,
+  updateAppointment,
+} from "@/lib/actions/appointment.actions";
 import { SelectItem } from "../ui/select";
 import { Doctors } from "@/constant";
 import Image from "next/image";
@@ -56,11 +59,11 @@ export function AppointmentForm({
   const form = useForm<z.infer<typeof AppointmentFormValidation>>({
     resolver: zodResolver(AppointmentFormValidation),
     defaultValues: {
-      primaryPhysician: "",
-      cancellationReason: "",
+      primaryPhysician: appointment ? appointment.primaryPhysician : '',
+      cancellationReason: appointment?.cancellationReason || '',
       note: "",
-      schedule: new Date(),
-      reason: "",
+      schedule: appointment ? new Date(appointment.schedule) : new Date(),
+      reason: appointment?.reason ? appointment.reason :'',
     },
   });
 
@@ -99,34 +102,29 @@ export function AppointmentForm({
             `/patients/${userId}/new-appointment/success?appointmentId=${appointment.$id}`
           );
         }
-      }
-      else{
+      } else {
         const appointmentToUpdae = {
           userId,
-          appointmentId:appointment?.$id,
-          appointment:{
-            primaryPhysician:values?.primaryPhysician,
-           schedule:new Date(values?.schedule),
-           status:status as Status,
-           cancellationReason:values?.cancellationReason,
+          appointmentId: appointment?.$id,
+          appointment: {
+            primaryPhysician: values?.primaryPhysician,
+            schedule: new Date(values?.schedule),
+            status: status as Status,
+            cancellationReason: values?.cancellationReason,
           },
-          type
-        }
+          type,
+        };
 
-        const updatedAppointment = await updateAppointment(appointmentToUpdae)
+        const updatedAppointment = await updateAppointment(appointmentToUpdae);
+
+        if (updatedAppointment) {
+          setOpen && setOpen(false);
+          form.reset();
+        }
       }
     } catch (error) {
       console.log("error", error);
     }
-
-    // try {
-    //   const userData = { name, email, phone };
-    //   const user = await createUser(userData);
-    //   console.log("user", user);
-    //   if (user) router.push(`/patients/${user?.$id}/register`);
-    // } catch (error: any) {
-    //   console.log("error");
-    // }
   }
 
   let buttonLabel;

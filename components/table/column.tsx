@@ -16,20 +16,12 @@ import { formatDateTime } from "@/lib/utils";
 import { Doctors } from "@/constant";
 import Image from "next/image";
 import AppointmentModal from "../AppointmentModal";
+import { Appointment } from "@/types/appwrite.types";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type Payment = {
-  id: string;
-  patient: {
-    name: string;
-  };
-  amount: number;
-  status: Status;
-  email: string;
-};
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Appointment>[] = [
   {
     header: "ID",
     cell: ({ row }) => <p className="text-14-medium">{row.index + 1}</p>,
@@ -69,6 +61,8 @@ export const columns: ColumnDef<Payment>[] = [
         (doc) => doc.name === row.original.primaryPhysician
       );
 
+      if (!doctor) return;
+
       return (
         <div className="flex items-center gap-3">
           <Image
@@ -86,24 +80,20 @@ export const columns: ColumnDef<Payment>[] = [
   {
     id: "actions",
     header: () => <div className="pl-4"> Actions</div>,
-    cell: ({ row :{original:data} }) => {
+    cell: ({ row: { original: data } }) => {
       return (
         <div className="flex gap-1">
           <AppointmentModal
             type="schedule"
             patientId={data.patient.$id}
             userId={data.userId}
-            appointmentId={data}
-            title="Schedule Appointment"
-            description="Please confirm the following details to scheduled"
+            appointment={data}
           />
-            <AppointmentModal
+          <AppointmentModal
             type="cancel"
             patientId={data.patient.$id}
             userId={data.userId}
-            appointmentId={data}
-            title="Cancel Appointment"
-            description="Are you sure you want to cancel this appointment"
+            appointment={data}
           />
         </div>
       );
