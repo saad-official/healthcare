@@ -9,6 +9,7 @@ import React from "react";
 
 const AdminPage = async () => {
   const appointment = await getRecentAppointmentList();
+  console.log('app', appointment)
   return (
     <div className="mx-auto flex max-w-7xl flex-col space-y-14">
       <header className="admin-header">
@@ -36,7 +37,7 @@ const AdminPage = async () => {
         <section className="admin-stat">
           <StatCard
             type="appointments"
-            count={appointment.ScheduledCount}
+            count={appointment.scheduledCount}
             label="Scheduled appointments"
             icon="/assets/icons/appointments.svg"
           />

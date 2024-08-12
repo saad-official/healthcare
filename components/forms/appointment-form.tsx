@@ -62,7 +62,7 @@ export function AppointmentForm({
       primaryPhysician: appointment ? appointment.primaryPhysician : '',
       cancellationReason: appointment?.cancellationReason || '',
       note: "",
-      schedule: appointment ? new Date(appointment.schedule) : new Date(),
+      schedule: appointment ? new Date(appointment.schedule) : new Date(Date.now()),
       reason: appointment?.reason ? appointment.reason :'',
     },
   });
