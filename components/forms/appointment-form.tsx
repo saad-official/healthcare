@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -50,8 +49,8 @@ export function AppointmentForm({
   type: "create" | "cancel" | "schedule";
   userId: string;
   patientId: string;
-  appointment: Appointment;
-  setOpen: (open: boolean) => void;
+  appointment?: Appointment;
+  setOpen?: (open: boolean) => void;
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -105,7 +104,7 @@ export function AppointmentForm({
       } else {
         const appointmentToUpdae = {
           userId,
-          appointmentId: appointment?.$id,
+          appointmentId: appointment?.$id!,
           appointment: {
             primaryPhysician: values?.primaryPhysician,
             schedule: new Date(values?.schedule),
