@@ -19,7 +19,7 @@ import SubmitButton from "../submit-button";
 import { useState } from "react";
 import { UserFormValidation } from "@/lib/validation";
 import { useRouter } from "next/navigation";
-import { createUser } from "@/lib/actions/patient.actions";
+import { createUser, getPatient } from "@/lib/actions/patient.actions";
 
 export enum FormFieldType {
   INPUT = "input",
@@ -54,7 +54,15 @@ export function PatientForm() {
       const user = await createUser(userData);
       console.log('user', user)
       if(user)
-        router.push(`/patients/${user?.$id}/register`);
+      {
+        const isUserFirstTime  = await getPatient(user?.$id);
+        console.log("check patient", isUserFirstTime);
+        if(isUserFirstTime)
+          router.push(`/patients/${user.$id}/new-appointment`)
+      else
+      router.push(`/patients/${user?.$id}/register`);
+      }
+        
     } catch (error:any) {
       console.log('error')
     }

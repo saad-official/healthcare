@@ -74,11 +74,20 @@ const SuccessAppointment = async ({
           </div>
 
           </section>
+
+          <div className="flex flex-col md:flex-row gap-4">
           <Button asChild variant='outline' className="shad-primary-btn">
             <Link href={`/patients/${userId}/new-appointment`}>
             New Appointment
             </Link>
           </Button>
+
+          <Button asChild  className="shad-primary-btn">
+            <Link href={`/`}>
+            Back to Home
+            </Link>
+          </Button>
+          </div>
 
           <p className="copyright"> @ 2024 Carepulse</p>
         
