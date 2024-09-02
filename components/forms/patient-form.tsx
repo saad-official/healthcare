@@ -62,7 +62,11 @@ export function PatientForm() {
       else
       router.push(`/patients/${user?.$id}/register`);
       }
-        
+      else
+      {
+      setIsLoading(false);
+      alert("InValid Credentials");
+      } 
     } catch (error:any) {
       console.log('error')
     }
